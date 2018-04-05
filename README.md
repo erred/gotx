@@ -8,12 +8,29 @@
 
 go-template-exec
 
-provides the function `slice` to create slices
-
 read STDIN -> parse and execute (text/template) -> print to STDOUT
 
 or walk srcdir and output to destdir (ignores empty files!)
 
+## Extra functions
+### slice
+define a slice in your template
+```go
+{{ $i := slice "a" "b" "c" }}
+```
+
+### obj
+define a json object
+```go
+{{ $i := obj `{"hello": "world"}` }}
+{{ index $i "hello" }}
+```
+### objs
+define a json array
+```go
+{{ $i := obj `[{"hello": "world"}, {"this": "is"}, {"a": "message"}]` }}
+{{ index (index $i 2) "a" }}
+```
 
 ## Install
 ```sh
@@ -21,30 +38,10 @@ go get github.com/seankhliao/gotx
 ```
 
 ## Usage
-#### Input 
-```sh
-gotx
-{{ range slice "a" "b" "c" }}
-    {{ . }}
-{{ end }}
 ```
-#### Output
-```
-{{ range slice "a" "b" "c" }}
-    {{ . }}
-{{ end }}
-
-    a
-
-
-    b
-
-
-    c
-
+gotx [--noecho]
 ```
 
-#### Input
-```sh
-gotx -src src -out dest 
+```
+gotx -src srcdir -out -destdir
 ```

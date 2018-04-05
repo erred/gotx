@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"io/ioutil"
@@ -39,14 +40,7 @@ func stdiomode(opts options) {
 	if err != nil {
 		log.Fatal("Error reading input: ", err)
 	}
-
-	t, err := template.New("").Funcs(
-		template.FuncMap(
-			map[string]interface{}{
-				"slice": func(args ...interface{}) []interface{} {
-					return args
-				},
-			})).Parse(string(b))
+	t, err := newTemplate().Parse(string(b))
 	if err != nil {
 		log.Fatal("Error parsing template: ", err)
 	}
@@ -65,13 +59,7 @@ func stdiomode(opts options) {
 }
 
 func dirmode(opts options) {
-	tmpls := template.New("").Funcs(
-		template.FuncMap(
-			map[string]interface{}{
-				"slice": func(args ...interface{}) []interface{} {
-					return args
-				},
-			}))
+	tmpls := newTemplate()
 	dirs := []string{}
 
 	filepath.Walk(opts.SrcDir, func(p string, info os.FileInfo, err error) error {
@@ -128,4 +116,31 @@ func dirmode(opts options) {
 			log.Fatal("error writing file", err)
 		}
 	}
+}
+
+func newTemplate() *template.Template {
+	t := template.New("").Funcs(
+		template.FuncMap(
+			map[string]interface{}{
+				"slice": func(args ...interface{}) []interface{} {
+					return args
+				},
+				"obj": func(obj string) map[string]interface{} {
+					o := map[string]interface{}{}
+					err := json.Unmarshal([]byte(obj), &o)
+					if err != nil {
+						log.Fatal(err)
+					}
+					return o
+				},
+				"objs": func(obj string) []map[string]interface{} {
+					o := []map[string]interface{}{}
+					err := json.Unmarshal([]byte(obj), &o)
+					if err != nil {
+						log.Fatal(err)
+					}
+					return o
+				},
+			}))
+	return t
 }
