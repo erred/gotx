@@ -26,7 +26,7 @@ func main() {
 	flag.StringVar(&opts.OutDir, "out", "", "output dir")
 	flag.Parse()
 
-	if opts.SrcDir == "" && opts.OutDir == "" {
+	if opts.SrcDir != "" && opts.OutDir != "" {
 		dirmode(opts)
 		return
 	}
