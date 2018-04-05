@@ -22,7 +22,7 @@ go get github.com/seankhliao/gotx
 
 ## Usage
 #### Input 
-```
+```sh
 gotx
 {{ range slice "a" "b" "c" }}
     {{ . }}
