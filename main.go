@@ -129,7 +129,7 @@ func newTemplate() *template.Template {
 					o := map[string]interface{}{}
 					err := json.Unmarshal([]byte(obj), &o)
 					if err != nil {
-						log.Fatal(err)
+						log.Fatal("Error parsing object: ", obj, "\nerror: ", err)
 					}
 					return o
 				},
@@ -137,7 +137,7 @@ func newTemplate() *template.Template {
 					o := []map[string]interface{}{}
 					err := json.Unmarshal([]byte(obj), &o)
 					if err != nil {
-						log.Fatal(err)
+						log.Fatal("Error parsing object: ", obj, "\nerror: ", err)
 					}
 					return o
 				},
